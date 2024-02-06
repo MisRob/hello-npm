@@ -1,6 +1,6 @@
 {
   "name": "@robosovam/hello-npm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A workflow for automated npm publishing",
   "main": "index.js",
   "scripts": {
