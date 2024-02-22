@@ -1,0 +1,33 @@
+name: Check PR for Changelog
+
+on:
+  pull_request:
+    types: [opened, edited, reopened]
+
+jobs:
+  check-description:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check PR Description
+        id: check_description
+        run: |
+          description=$(jq -r ".pull_request.body" "$GITHUB_EVENT_PATH")
+          if [[ "$description" == *"## Changelog"* ]]; then
+            echo "containsChangelog=true" >> $GITHUB_OUTPUT
+          else
+            echo "containsChangelog=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Results
+        run: |
+          if [[ "${{ steps.check_description.outputs.containsChangelog }}" == "true" ]]; then
+            echo "PR contains Changelog section"
+            exit 0
+          else
+            echo "PR does not contain Changelog section"
+            exit 1
+          fi
